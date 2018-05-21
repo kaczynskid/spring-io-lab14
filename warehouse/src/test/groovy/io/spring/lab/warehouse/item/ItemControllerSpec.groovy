@@ -65,4 +65,17 @@ class ItemControllerSpec extends SpringSpecBase {
                 .andExpect(jsonPath('$.count').value(100))
                 .andExpect(jsonPath('$.price').value(27.3))
     }
+
+    def "Should update item stock"() {
+        when:
+            def resp = mvc.perform(put('/items/4/stock').contentType(APPLICATION_JSON_UTF8)
+                    .content(json.writeValueAsString([countDiff: -27])))
+        then:
+            resp.andExpect(status().isOk())
+                    .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                    .andExpect(jsonPath('$.id').value(4L))
+                    .andExpect(jsonPath('$.name').value('D'))
+                    .andExpect(jsonPath('$.count').value(73))
+                    .andExpect(jsonPath('$.price').value(25))
+    }
 }

@@ -4,9 +4,11 @@ import static io.spring.lab.warehouse.TestDataConfiguration.itemsTestData;
 import static org.apache.commons.lang3.reflect.FieldUtils.writeField;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -64,5 +66,29 @@ public class ItemControllerTest {
             writeField(item, "id", itemId, true);
             return item;
         };
+    }
+
+    @Test
+    public void shouldReturn404WhenItemNotFound() throws Exception {
+        doThrow(new ItemNotFound(5))
+                .when(items).findOne(5L);
+
+        mvc.perform(get("/items/{id}", 5L))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Item 5 does not exist"));
+    }
+
+    @Test
+    public void shouldReturn400WhenOutOfStock() throws Exception {
+        Item item = new Item(5L, "test", 5, BigDecimal.valueOf(13.5));
+
+        doThrow(new OutOfStock(item, -10))
+                .when(items).updateStock(ItemStockUpdate.of(-10).withId(item.getId()));
+
+        mvc.perform(put("/items/{id}/stock", item.getId())
+                .contentType(APPLICATION_JSON_UTF8)
+                .content("{\"countDiff\": -10}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Item test has only 5 out of -10 requested"));
     }
 }
