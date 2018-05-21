@@ -14,11 +14,8 @@ public class ItemService {
 	private final ItemRepository items;
 
 	public Item findOne(long id) {
-		Item item = items.findOne(id);
-		if (item == null) {
-			throw new ItemNotFound(id);
-		}
-		return item;
+		return items.findOne(id)
+				.orElseThrow(() -> new ItemNotFound(id));
 	}
 
 	public List<Item> findAll() {

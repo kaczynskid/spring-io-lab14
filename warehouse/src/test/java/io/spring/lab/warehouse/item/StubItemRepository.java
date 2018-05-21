@@ -7,19 +7,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.springframework.stereotype.Component;
-
-@Component
 class StubItemRepository implements ItemRepository {
 
     private final AtomicLong seq = new AtomicLong();
     private final Map<Long, Item> db = new HashMap<>();
 
     @Override
-    public Item findOne(long id) {
-        return db.get(id);
+    public Optional<Item> findOne(long id) {
+        return ofNullable(db.get(id));
     }
 
     @Override

@@ -1,10 +1,11 @@
 package io.spring.lab.warehouse.item;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ItemRepository {
 
-    Item findOne(long id);
+    Optional<Item> findOne(long id);
 
     List<Item> findAll();
 
