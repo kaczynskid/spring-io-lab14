@@ -7,6 +7,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import io.spring.lab.marketing.special.Special;
@@ -15,6 +16,7 @@ import io.spring.lab.marketing.special.select.BestSpecialSelector;
 import io.spring.lab.marketing.special.select.SpecialSelector;
 import io.spring.lab.math.MathProperties;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @SpringBootApplication
 public class MarketingApplication {
@@ -23,20 +25,22 @@ public class MarketingApplication {
 		SpringApplication.run(MarketingApplication.class, args);
 	}
 
-	@Bean
-	MathProperties mathProperties() {
-		return new MathProperties();
-	}
+}
+
+@Slf4j
+@Configuration
+class SpecialSelectorConfiguration {
 
 	@Bean
 	SpecialSelector specialSelector(MathProperties math) {
 		return new BestSpecialSelector(math);
 	}
+
 }
 
 @Component
 @AllArgsConstructor
-class TestDataInit implements ApplicationRunner {
+class TestDataInitializer implements ApplicationRunner {
 
 	private final SpecialRepository specials;
 
