@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -39,6 +40,7 @@ class ItemControllerSpec extends SpringSpecBase {
                     .content(json.writeValueAsString([name: 'test', count: 5, price: 13.5])))
         then:
             resp.andExpect(status().isCreated())
+                    .andExpect(header().string('Location', 'http://localhost/items/5'))
     }
 
     def "Should find item"() {

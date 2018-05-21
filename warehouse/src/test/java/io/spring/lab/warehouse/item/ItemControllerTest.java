@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,7 +58,8 @@ public class ItemControllerTest {
 
         mvc.perform(post("/items").contentType(APPLICATION_JSON_UTF8)
                 .content("{\"name\": \"test\", \"count\": 5, \"price\": 13.5}"))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", "http://localhost/items/5"));
     }
 
     private static Answer returnItemWithSetId(long itemId) {
