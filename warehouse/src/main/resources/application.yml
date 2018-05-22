@@ -6,3 +6,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: "validate"
+
+management:
+  endpoints:
+    web:
+      base-path: "/admin"
+      exposure:
+        include: "*"
+
+
+info:
+  whatever: "hello"
