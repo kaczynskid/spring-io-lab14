@@ -1,6 +1,6 @@
 spring:
   application:
-    name: "warehouse"
+    name: "marketing"
   cloud:
     config:
       discovery:

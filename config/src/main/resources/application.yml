@@ -2,11 +2,21 @@ server:
   port: 9000
 
 spring:
+  application:
+    name: "config"
   cloud:
     config:
       server:
         git:
-          uri: file:///home/darek/Devel/Spring/spring-io-lab14-config
+          uri: "file:///home/darek/Devel/Spring/spring-io-lab14-config"
+eureka:
+  instance:
+    prefer-ip-address: true
+    health-check-url-path: "/admin/health"
+    status-page-url-path: "/admin/info"
+  client:
+    serviceUrl:
+      defaultZone: "http://localhost:9010/eureka"
 
 management:
   endpoints:
