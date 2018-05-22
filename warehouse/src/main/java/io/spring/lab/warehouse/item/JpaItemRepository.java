@@ -13,6 +13,9 @@ import lombok.AllArgsConstructor;
 public class JpaItemRepository implements ItemRepository {
 
     interface SpringDataItemRepository extends JpaRepository<Item, Long> {
+
+        Item findTopByOrderByPriceDesc();
+
     }
 
     private final SpringDataItemRepository repository;
@@ -30,6 +33,11 @@ public class JpaItemRepository implements ItemRepository {
     @Override
     public Item save(Item item) {
         return repository.save(item);
+    }
+
+    @Override
+    public Item findMostExpensive() {
+        return repository.findTopByOrderByPriceDesc();
     }
 
 }

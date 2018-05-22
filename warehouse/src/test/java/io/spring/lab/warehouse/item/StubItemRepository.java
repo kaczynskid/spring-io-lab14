@@ -4,6 +4,7 @@ import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.reflect.FieldUtils.writeField;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,5 +41,12 @@ class StubItemRepository implements ItemRepository {
         } catch (IllegalAccessException e) {
             throw new RuntimeException("Unexpected error!", e);
         }
+    }
+
+    @Override
+    public Item findMostExpensive() {
+        return db.values().stream()
+                .max(Comparator.comparing(Item::getPrice))
+                .orElseThrow(() -> new RuntimeException("Empty DB!"));
     }
 }
