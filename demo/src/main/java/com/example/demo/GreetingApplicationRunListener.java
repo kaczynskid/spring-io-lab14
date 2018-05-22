@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringApplicationRunListener;
@@ -21,6 +22,13 @@ public class GreetingApplicationRunListener implements SpringApplicationRunListe
         this.args = args;
     }
 
+    private String appClass() {
+        return Optional.ofNullable(app)
+                .map(SpringApplication::getMainApplicationClass)
+                .map(Class::getSimpleName)
+                .orElse("UNKNOWN");
+    }
+
     @Override
     public int getOrder() {
         return Ordered.LOWEST_PRECEDENCE;
@@ -28,36 +36,36 @@ public class GreetingApplicationRunListener implements SpringApplicationRunListe
 
     @Override
     public void starting() {
-        log.info("### starting {} with args {}", app.getMainApplicationClass().getSimpleName(), Arrays.toString(args));
+        log.info("### starting {} with args {}", appClass(), Arrays.toString(args));
     }
 
     @Override
     public void environmentPrepared(ConfigurableEnvironment environment) {
-        log.info("### environmentPrepared {} with args {}", app.getMainApplicationClass().getSimpleName(), Arrays.toString(args));
+        log.info("### environmentPrepared {} with args {}", appClass(), Arrays.toString(args));
     }
 
     @Override
     public void contextPrepared(ConfigurableApplicationContext context) {
-        log.info("### contextPrepared {} with args {}", app.getMainApplicationClass().getSimpleName(), Arrays.toString(args));
+        log.info("### contextPrepared {} with args {}", appClass(), Arrays.toString(args));
     }
 
     @Override
     public void contextLoaded(ConfigurableApplicationContext context) {
-        log.info("### contextLoaded {} with args {}", app.getMainApplicationClass().getSimpleName(), Arrays.toString(args));
+        log.info("### contextLoaded {} with args {}", appClass(), Arrays.toString(args));
     }
 
     @Override
     public void started(ConfigurableApplicationContext context) {
-        log.info("### started {} with args {}", app.getMainApplicationClass().getSimpleName(), Arrays.toString(args));
+        log.info("### started {} with args {}", appClass(), Arrays.toString(args));
     }
 
     @Override
     public void running(ConfigurableApplicationContext context) {
-        log.info("### running {} with args {}", app.getMainApplicationClass().getSimpleName(), Arrays.toString(args));
+        log.info("### running {} with args {}", appClass(), Arrays.toString(args));
     }
 
     @Override
     public void failed(ConfigurableApplicationContext context, Throwable exception) {
-        log.info("### failed {} with args {}", app.getMainApplicationClass().getSimpleName(), Arrays.toString(args));
+        log.info("### failed {} with args {}", appClass(), Arrays.toString(args));
     }
 }
