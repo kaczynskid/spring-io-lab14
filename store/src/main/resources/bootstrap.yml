@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: "store"
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: "config"
+      fail-fast: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: "http://localhost:9010/eureka"
