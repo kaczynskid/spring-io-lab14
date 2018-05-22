@@ -1,6 +1,7 @@
 package io.spring.lab.warehouse.item;
 
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.reflect.FieldUtils.writeField;
 
 import java.util.ArrayList;
@@ -48,5 +49,12 @@ class StubItemRepository implements ItemRepository {
         return db.values().stream()
                 .max(Comparator.comparing(Item::getPrice))
                 .orElseThrow(() -> new RuntimeException("Empty DB!"));
+    }
+
+    @Override
+    public List<Item> findByNamePrefix(String prefix) {
+        return db.values().stream()
+                .filter(item -> item.getName().startsWith(prefix))
+                .collect(toList());
     }
 }
