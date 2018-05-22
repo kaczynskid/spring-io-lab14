@@ -13,7 +13,9 @@ management:
       base-path: "/admin"
       exposure:
         include: "*"
-
+  endpoint:
+    health:
+      show-details: always
 
 info:
   whatever: "hello"
