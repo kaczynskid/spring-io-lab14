@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import io.spring.lab.warehouse.error.ErrorMessage;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +35,11 @@ public class ItemController {
 
     private final ItemService items;
 
+    private final MeterRegistry registry;
+
     @GetMapping
     List<ItemRepresentation> findAll() {
+        registry.counter("web.items.get").increment();
         return items.findAll().stream()
                 .map(ItemRepresentation::of)
                 .collect(toList());
@@ -43,6 +47,7 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody ItemRepresentation request) {
+        registry.counter("web.items.post").increment();
         Item item = items.create(request.asItem());
         return ResponseEntity.created(selfUriOf(item)).build();
     }
@@ -53,16 +58,19 @@ public class ItemController {
 
     @GetMapping("/{id}")
     public ItemRepresentation findOne(@PathVariable("id") long id) {
+        registry.counter("web.items.id.get").increment();
         return ItemRepresentation.of(items.findOne(id));
     }
 
     @PutMapping("/{id}")
     public ItemRepresentation update(@PathVariable("id") long id, @RequestBody ItemUpdate changes) {
+        registry.counter("web.items.id.put").increment();
         return ItemRepresentation.of(items.update(changes.withId(id)));
     }
 
     @PutMapping("/{id}/stock")
     public ItemRepresentation updateStock(@PathVariable("id") long id, @RequestBody ItemStockUpdate changes) {
+        registry.counter("web.items.id.stock.put").increment();
         return ItemRepresentation.of(items.updateStock(changes.withId(id)));
     }
 

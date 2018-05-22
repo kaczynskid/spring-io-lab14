@@ -77,6 +77,17 @@
 		</dependency>
 
 		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-graphite</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-rest-hal-browser</artifactId>
+			<version>3.0.7.RELEASE</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>

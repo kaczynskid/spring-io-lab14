@@ -2,9 +2,11 @@ package io.spring.lab.warehouse.item;
 
 import static io.spring.lab.warehouse.TestDataConfiguration.itemsTestData;
 import static org.apache.commons.lang3.reflect.FieldUtils.writeField;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -16,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.math.BigDecimal;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.stubbing.Answer;
@@ -25,6 +28,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+
 @RunWith(SpringRunner.class)
 @WebMvcTest(ItemController.class)
 public class ItemControllerTest {
@@ -32,8 +38,17 @@ public class ItemControllerTest {
     @MockBean
     ItemService items;
 
+    @MockBean
+    MeterRegistry registry;
+
     @Autowired
     MockMvc mvc;
+
+    @Before
+    public void setUp() {
+        doReturn(mock(Counter.class))
+                .when(registry).counter(anyString());
+    }
 
     @Test
     public void shouldGetAllItems() throws Exception {
