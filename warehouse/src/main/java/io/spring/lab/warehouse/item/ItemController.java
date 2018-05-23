@@ -43,9 +43,11 @@ public class ItemController {
     @GetMapping
     List<ItemRepresentation> findAll() {
         registry.counter("web.items.get").increment();
-        return items.findAll().stream()
+        List<Item> list = items.findAll();
+        log.info("Found {} items.", list.size());
+        return list.stream()
                 .map(ItemRepresentation::of)
-                .map(i -> i.withInstanceId(env.getRequiredProperty("info.instanceId")))
+                .map(r -> r.withInstanceId(env.getRequiredProperty("info.instanceId")))
                 .collect(toList());
     }
 
@@ -53,6 +55,7 @@ public class ItemController {
     public ResponseEntity<?> create(@RequestBody ItemRepresentation request) {
         registry.counter("web.items.post").increment();
         Item item = items.create(request.asItem());
+        log.info("Created item {}.", item.getName());
         return ResponseEntity.created(selfUriOf(item)).build();
     }
 
@@ -63,19 +66,23 @@ public class ItemController {
     @GetMapping("/{id}")
     public ItemRepresentation findOne(@PathVariable("id") long id) {
         registry.counter("web.items.id.get").increment();
-        return ItemRepresentation.of(items.findOne(id)).
-                withInstanceId(env.getRequiredProperty("info.instanceId"));
+        Item item = items.findOne(id);
+        log.info("Found item {}.", item.getName());
+        return ItemRepresentation.of(item)
+                .withInstanceId(env.getRequiredProperty("info.instanceId"));
     }
 
     @PutMapping("/{id}")
     public ItemRepresentation update(@PathVariable("id") long id, @RequestBody ItemUpdate changes) {
         registry.counter("web.items.id.put").increment();
+        log.info("Update item {}.", changes);
         return ItemRepresentation.of(items.update(changes.withId(id)));
     }
 
     @PutMapping("/{id}/stock")
     public ItemRepresentation updateStock(@PathVariable("id") long id, @RequestBody ItemStockUpdate changes) {
         registry.counter("web.items.id.stock.put").increment();
+        log.info("Update item stock {}.", changes);
         return ItemRepresentation.of(items.updateStock(changes.withId(id)));
     }
 
