@@ -142,6 +142,10 @@
 				<artifactId>spring-cloud-contract-maven-plugin</artifactId>
 				<version>2.0.0.BUILD-SNAPSHOT</version>
 				<extensions>true</extensions>
+				<configuration>
+					<baseClassForTests>io.spring.lab.marketing.MarketingContractTestBase</baseClassForTests>
+					<!--<baseClassForTests>io.spring.lab.marketing.MarketingContractTestBase</baseClassForTests>-->
+				</configuration>
 			</plugin>
 
 			<plugin>

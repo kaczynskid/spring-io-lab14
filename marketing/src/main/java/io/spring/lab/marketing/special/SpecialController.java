@@ -1,6 +1,7 @@
 package io.spring.lab.marketing.special;
 
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class SpecialController {
                 .collect(toList());
     }
 
-    @PostMapping("/{itemId}/calculate")
+    @PostMapping(path = "/{itemId}/calculate", produces = APPLICATION_JSON_UTF8_VALUE)
     public SpecialCalculation calculateFor(@PathVariable("itemId") long itemId,
                                            @RequestBody SpecialCalculationRequest request) {
         SpecialCalculation calculation = specials.calculateFor(itemId, request.getUnitPrice(), request.getUnitCount());
