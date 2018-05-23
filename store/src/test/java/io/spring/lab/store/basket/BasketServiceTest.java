@@ -7,6 +7,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import java.math.BigDecimal;
 
 import org.junit.Test;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,8 +23,8 @@ import io.spring.lab.store.item.ItemsClient;
 
 @SpringBootTest(webEnvironment = NONE)
 @AutoConfigureStubRunner(
-        ids = "io.spring.lab:marketing:+",
-        stubsMode = StubsMode.LOCAL
+        stubsMode = StubsMode.LOCAL,
+        ids = "io.spring.lab:marketing:+"
 )
 @DirtiesContext
 public class BasketServiceTest extends SpringTestBase {
@@ -40,8 +41,7 @@ public class BasketServiceTest extends SpringTestBase {
         long itemId = 5L;
         int unitCount = 3;
         BigDecimal unitPrice = BigDecimal.valueOf(30.0);
-        when(items.findOne(itemId))
-                .thenReturn(new ItemRepresentation("E", unitPrice));
+        givenItemExists(itemId, unitPrice);
 
         // when
         BasketUpdateDiff diff = baskets.updateItem(basket.getId(), itemId, unitCount);
@@ -57,7 +57,27 @@ public class BasketServiceTest extends SpringTestBase {
 
     @Test
     public void shouldUpdateBasketWithSpecialPriceItem() {
+        // given
+        Basket basket = baskets.create();
+        long itemId = 1L;
+        int unitCount = 5;
+        BigDecimal unitPrice = BigDecimal.valueOf(40.0);
+        givenItemExists(itemId, unitPrice);
 
+        // when
+        BasketUpdateDiff diff = baskets.updateItem(basket.getId(), itemId, unitCount);
+
+        // then
+        assertThat(diff.getCountDiff()).isEqualTo(5);
+        assertThat(diff.getPriceDiff()).isEqualByComparingTo(BigDecimal.valueOf(150.0));
+        BasketItem basketItem = basketItems.findOneItem(basket.getId(), itemId);
+        assertThat(basketItem.getName()).isEqualTo("E");
+        assertThat(basketItem.getTotalPrice()).isEqualByComparingTo(BigDecimal.valueOf(150.0));
+        assertThat(basketItem.getSpecialId()).isEqualTo("abcdefghijklmnopqrstuw0123456789");
     }
 
+    private void givenItemExists(long itemId, BigDecimal unitPrice) {
+        when(items.findOne(itemId))
+                .thenReturn(new ItemRepresentation("E", unitPrice));
+    }
 }
