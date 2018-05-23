@@ -55,7 +55,7 @@ class CloudConfig {
 	}
 }
 
-
+@Slf4j
 @Configuration
 class ClientsConfig {
 
@@ -66,20 +66,26 @@ class ClientsConfig {
 			public List<ItemRepresentation> findAll() {
 				ParameterizedTypeReference<List<ItemRepresentation>> responseType =
 						new ParameterizedTypeReference<List<ItemRepresentation>>() {};
-				return rest
+				List<ItemRepresentation> items = rest
 						.exchange(
 								"http://warehouse/items",
 								HttpMethod.GET,
 								null,
 								responseType)
 						.getBody();
+				items.stream().findFirst().ifPresent(item -> {
+					log.info("Got all items from instance {}", item.getInstanceId());
+				});
+				return items;
 			}
 
 			@Override
 			public ItemRepresentation findOne(long id) {
-				return rest
+				ItemRepresentation item = rest
 						.getForEntity("http://warehouse/items/{id}", ItemRepresentation.class, id)
 						.getBody();
+				log.info("Got item from instance {}", item.getInstanceId());
+				return item;
 			}
 
 			@Override
