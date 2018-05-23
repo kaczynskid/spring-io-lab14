@@ -97,7 +97,7 @@ class ClientsConfig {
 		};
 	}
 
-	@Bean
+//	@Bean
 	SpecialClient specialClient() {
 		return new SpecialClient() {
 			@Override
