@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+
+  # see 'Using the Dashboards' at https://hub.docker.com/r/jlachowski/grafana-graphite-statsd/
+  grafana:
+    image: "jlachowski/grafana-graphite-statsd"
+    ports:
+      - "80:80"
+      - "2003:2003"
+      - "8125:8125/udp"
+      - "8126:8126"
+
+  elk:
+    image: "sebp/elk:es232_l232_k450"
+    ports:
+      - "5601:5601"
+      - "10042:10042/udp"
+    volumes:
+      - "elk-data:/var/lib/elasticsearch"
+      - "./logstash-input.conf:/etc/logstash/conf.d/03-logstash-input.conf:ro"
+      - "./logstash-output.conf:/etc/logstash/conf.d/30-output.conf:ro"
+
+  warehouse-data:
+    image: "postgres:9"
+    ports:
+      - "5432:5432"
+    volumes:
+      - "warehouse-data:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_PASSWORD: "sprio"
+      POSTGRES_DB: "warehouse"
+
+  store-data:
+    image: "mysql:5.7"
+    ports:
+      - "3306:3306"
+    volumes:
+      - "store-data:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: "sprio"
+      MYSQL_DATABASE: "store"
+
+  rabbit:
+    image: "rabbitmq:3"
+    ports:
+      - "5672:5672"
+
+  rabbit-mgmt:
+    image: "rabbitmq:3-management"
+    ports:
+      - "15672:15672"
+
+volumes:
+    elk-data:
+    warehouse-data:
+    store-data:
