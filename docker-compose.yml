@@ -28,8 +28,8 @@ services:
     volumes:
       - "warehouse-data:/var/lib/postgresql/data"
     environment:
-      POSTGRES_PASSWORD: "sprio"
-      POSTGRES_DB: "warehouse"
+      - "POSTGRES_PASSWORD=sprio"
+      - "POSTGRES_DB=warehouse"
 
   store-data:
     image: "mysql:5.7"
@@ -38,8 +38,8 @@ services:
     volumes:
       - "store-data:/var/lib/mysql"
     environment:
-      MYSQL_ROOT_PASSWORD: "sprio"
-      MYSQL_DATABASE: "store"
+      - "MYSQL_ROOT_PASSWORD=sprio"
+      - "MYSQL_DATABASE=store"
 
   rabbit:
     image: "rabbitmq:3"
