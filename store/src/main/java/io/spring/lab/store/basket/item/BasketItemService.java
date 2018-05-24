@@ -68,7 +68,7 @@ public class BasketItemService {
 
 	public void checkout(long basketId) {
 		basketItems.findByBasketId(basketId).forEach(basketItem ->
-				items.updateStock(new ItemStockUpdate(basketItem.getItemId(), -basketItem.getUnitCount()))
+				items.checkoutItem(new ItemStockUpdate(basketItem.getItemId(), -basketItem.getUnitCount()))
 		);
 	}
 }

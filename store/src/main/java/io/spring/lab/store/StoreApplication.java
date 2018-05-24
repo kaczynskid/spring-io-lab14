@@ -93,7 +93,7 @@ class ClientsConfig {
 			}
 
 			@Override
-			public void updateStock(ItemStockUpdate changes) {
+			public void checkoutItem(ItemStockUpdate changes) {
 
 			}
 		};

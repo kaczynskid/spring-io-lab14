@@ -8,5 +8,5 @@ public interface ItemsClient {
 
     ItemRepresentation findOne(long id);
 
-    void updateStock(ItemStockUpdate changes);
+    void checkoutItem(ItemStockUpdate changes);
 }

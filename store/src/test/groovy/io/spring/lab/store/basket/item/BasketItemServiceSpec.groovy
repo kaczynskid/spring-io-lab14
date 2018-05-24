@@ -96,6 +96,6 @@ class BasketItemServiceSpec extends Specification {
             basketItems.checkout(basket.id)
 
         then:
-            verify(items).updateStock(new ItemStockUpdate(6L, -5))
+            verify(items).checkoutItem(new ItemStockUpdate(6L, -5))
     }
 }

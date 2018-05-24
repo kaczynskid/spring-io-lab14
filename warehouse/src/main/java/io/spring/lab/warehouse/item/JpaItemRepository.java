@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
@@ -44,7 +46,7 @@ public class JpaItemRepository implements ItemRepository {
 
     @Override
     public List<Item> findAll() {
-        return repository.findAll();
+        return repository.findAll(Sort.by(Order.asc("id")));
     }
 
     @Override
